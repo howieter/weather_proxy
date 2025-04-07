@@ -1,12 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-	httpserver "weatherproxy/server"
+	handlerHttp "weatherproxy/handler"
+
+	godotenv "github.com/joho/godotenv"
 )
 
 func main() {
-	http.HandleFunc("/hello", httpserver.Hello)
-	http.HandleFunc("/headers", httpserver.Headers)
-	http.ListenAndServe(":8090", nil)
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	http.HandleFunc("/weather", handlerHttp.Weather)
+
+	fmt.Println("Starting local server at port 8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
 }
